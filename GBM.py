@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Aug 17 10:57:36 2017
-
-@author: lenovo
-"""
-
 import pandas as pd
 from sklearn.svm import SVR
 import numpy as np
@@ -32,7 +25,8 @@ def get_return(stock):
     return e_return,resiko,y[-1]
 
 something = get_return('goog.csv')
-i_price = something[2]
+
+i_price = float(input("Initial price: "))
 e_return = something[0]
 stdev = something[1]
 
@@ -62,11 +56,10 @@ for i in range(len(prices)):
 mean = np.average(predictions)
 dev = statistics.stdev(predictions)
 
-print("\ninitial price: %.2f" %(something[-1]))
 print("Prediction:")
-print("Mean: %.2f" %(mean))
-print("Standard Deviation: %.2f" %(dev))
-print("price range: %.2f - %.2f" %(mean-dev,mean+dev))
+print(" Mean: %.2f" %(mean))
+print(" Standard Deviation: %.2f" %(dev))
+print(" price range: %.2f - %.2f" %(mean-dev,mean+dev))
 
 hist, bins = np.histogram(predictions, bins=50)
 width = 0.7 * (bins[1] - bins[0])
