@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 
 @jit
 def get_return(stock):
-    d = pd.read_csv('goog.csv')
+    d = pd.read_csv(stock)
     d.iloc[:] = d.iloc[::-1].values
     svr_lin = SVR(kernel= 'linear', C= 1e3) 
     X=np.arange(1,len(d)+1,1.0)
@@ -24,9 +24,10 @@ def get_return(stock):
     resiko = statistics.stdev(mth_return)
     return e_return,resiko,y[-1]
 
-something = get_return('goog.csv')
+something = get_return('tsla.csv')
 
 i_price = float(input("Initial price: "))
+initial = i_price
 e_return = something[0]
 stdev = something[1]
 
@@ -37,7 +38,7 @@ step = 0.004
 days = hari*step
 
 for i in range(len(prices)):
-    i_price = something[2]
+    i_price = initial
     prices[i].append(i_price)
     for t in np.arange(0,days,step):
         prices[i].append(i_price)
@@ -60,6 +61,7 @@ print("Prediction:")
 print(" Mean: %.2f" %(mean))
 print(" Standard Deviation: %.2f" %(dev))
 print(" price range: %.2f - %.2f" %(mean-dev,mean+dev))
+
 
 hist, bins = np.histogram(predictions, bins=50)
 width = 0.7 * (bins[1] - bins[0])
