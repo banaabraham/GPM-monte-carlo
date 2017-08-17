@@ -35,19 +35,33 @@ something = get_return('goog.csv')
 i_price = something[2]
 e_return = something[0]
 stdev = something[1]
-trials = 40
+trials = int(input("Number of trials: "))
 prices = [[] for i in range(trials)]
+hari = float(input("Days : "))
 step = 0.004
+days = hari*step
 
 for i in range(len(prices)):
     i_price = something[2]
     prices[i].append(i_price)
-    for t in np.arange(0,0.08,step):
+    for t in np.arange(0,days,step):
         prices[i].append(i_price)
         eps = random.uniform(-1.0,1.0)
         d_price = i_price*((e_return*step)+(stdev*eps*t**0.5))
         i_price += d_price
+       
         
+"""              
 for i in range(len(prices)):
     plt.plot(prices[i])
+"""    
+predictions = []
+for i in range(len(prices)):
+    predictions.append(prices[i][-1])
+
+hist, bins = np.histogram(predictions, bins=50)
+width = 0.7 * (bins[1] - bins[0])
+center = (bins[:-1] + bins[1:]) / 2
+plt.bar(center, hist, align='center', width=width)
+plt.show()
 
