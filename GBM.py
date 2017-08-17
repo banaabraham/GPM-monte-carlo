@@ -2,7 +2,7 @@
 """
 Created on Thu Aug 17 10:57:36 2017
 
-@author: Bana
+@author: lenovo
 """
 
 import pandas as pd
@@ -35,6 +35,7 @@ something = get_return('goog.csv')
 i_price = something[2]
 e_return = something[0]
 stdev = something[1]
+
 trials = int(input("Number of trials: "))
 prices = [[] for i in range(trials)]
 hari = float(input("Days : "))
@@ -58,10 +59,17 @@ for i in range(len(prices)):
 predictions = []
 for i in range(len(prices)):
     predictions.append(prices[i][-1])
+mean = np.average(predictions)
+dev = statistics.stdev(predictions)
+
+print("\ninitial price: %.2f" %(something[-1]))
+print("Prediction:")
+print("Mean: %.2f" %(mean))
+print("Standard Deviation: %.2f" %(dev))
+print("price range: %.2f - %.2f" %(mean-dev,mean+dev))
 
 hist, bins = np.histogram(predictions, bins=50)
 width = 0.7 * (bins[1] - bins[0])
 center = (bins[:-1] + bins[1:]) / 2
 plt.bar(center, hist, align='center', width=width)
 plt.show()
-
