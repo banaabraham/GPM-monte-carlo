@@ -4,13 +4,13 @@ python code to perform monte carlo simulation for certain security
 
 ## How to use
 
-![Alt text](/relative/path/to/img.jpg?raw=true)
+![Alt text](/img.jpg?raw=true)
 
 ## Dependencies
 
-*pandas
-*numba
-*matplotlib
+*[pandas]
+*[numba]
+*[matplotlib]
 
 ## License
 
