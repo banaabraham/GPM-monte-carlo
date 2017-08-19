@@ -4,13 +4,11 @@ python code to perform monte carlo simulation for certain security
 
 ## How to use
 
-![Alt text](/img.jpg?raw=true)
+![Alt](/img.JPG?raw=true "Screenshot")
 
 ## Dependencies
 
-*[pandas]
-*[numba]
-*[matplotlib]
+pandas,numba,matplotlib
 
 ## License
 
