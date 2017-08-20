@@ -10,7 +10,7 @@ from matplotlib import pyplot as plt
 def get_return_df(stock):
     d = pd.read_csv(stock)
     d.iloc[:] = d.iloc[::-1].values
-    svr_lin = SVR(kernel= 'linear', C= 1e3) 
+    svr_lin = SVR(kernel= 'linear', C= 1e3)
     X=np.arange(1,len(d)+1,1.0)
     X=np.reshape(X,(len(X),1))
     y=d['Close'].values
@@ -19,12 +19,11 @@ def get_return_df(stock):
     e_return = (y_lin[-1]-y_lin[0])/y_lin[0]
     #calculate stdev of returns
     mth_return = []  
-    for i in range(len(y)-1,0,-30):
-        mth_return.append((y[i]-y[i-30])/y[i-30])
+    for i in range(len(y)-1,0,-10):
+        mth_return.append((y[i]-y[i-10])/y[i-10])
     resiko = statistics.stdev(mth_return)
-    return e_return,resiko,y[-1]
+    return e_return,resiko
 
-@jit
 def get_return(stock):
     d = pd.read_csv(stock)
     d.iloc[:] = d.iloc[::-1].values
@@ -37,13 +36,13 @@ def get_return(stock):
     e_return = (y_lin[-1]-y_lin[0])/y_lin[0]
     #calculate stdev of returns
     mth_return = []  
-    for i in range(len(y)-1,0,-30):
-        mth_return.append((y[i]-y[i-30])/y[i-30])
+    for i in range(len(y)-1,0,-10):
+        mth_return.append((y[i]-y[i-10])/y[i-10])
     resiko = statistics.stdev(mth_return)
-    return e_return,resiko,y[-1]
+    return e_return,resiko
 
-@jit
-def monte_carlo(trials,i_price,k,w):
+def monte_carlo(trials,i_price,k,w,e_return,stdev):
+    prices = [[] for i in range(trials)]
     days = w*k
     initial = i_price
     for i in range(len(prices)):
@@ -54,26 +53,35 @@ def monte_carlo(trials,i_price,k,w):
             eps = random.uniform(-1.0,1.0)
             d_price = i_price*((e_return*k)+(stdev*eps*t**0.5))
             i_price += d_price
+    return prices        
 
-if __name__ == '__main__':
+def analyze(prices):            
+    predictions = []
+    for i in range(len(prices)):
+        predictions.append(prices[i][-1])
+    mean = np.average(predictions)
+    dev = statistics.stdev(predictions)
+    return predictions,mean,dev            
 
-    file_type = input("Input File Type (Dataframe(df) or list (l)): ")
+
+def main():    
+    b=1
+    while b==1:
+        file_type = input("Input File Type (Dataframe(df) or list (l)): ")
+        if file_type=="df" or file_type=="l":
+            b=0
     if file_type=="df":
         file = input("input file: ")
         something = get_return_df(file)
-    else:
+    elif file_type=="df":
         file = input("input file: ")
-        something = get_return(file)
-           
+        something = get_return(file)    
+                       
     i_price = float(input("Initial price: "))
-    initial = i_price
-    e_return = something[0]
-    stdev = something[1]
+    e_return,resiko = something
     
-    trials = int(input("Number of trials: "))
-    prices = [[] for i in range(trials)]
-    
-    opsi = input("Seconds or Days (S/D): ")
+    trials = int(input("Number of trials: "))   
+    opsi = input("Seconds, Hours, Days (S/H/D): ")
     
     if opsi=="D":
         k=0.04
@@ -82,14 +90,8 @@ if __name__ == '__main__':
         k=1.0
         hari = float(input("Seconds : "))    
     
-    monte_carlo(trials,i_price,k,hari)
-        
-                     
-    predictions = []
-    for i in range(len(prices)):
-        predictions.append(prices[i][-1])
-    mean = np.average(predictions)
-    dev = statistics.stdev(predictions)
+    prices = monte_carlo(trials,i_price,k,hari,e_return,resiko)
+    predictions,mean,dev = analyze(prices)
     
     print("Prediction:")
     print(" Mean: %.2f" %(mean))
@@ -102,3 +104,6 @@ if __name__ == '__main__':
     center = (bins[:-1] + bins[1:]) / 2
     plt.bar(center, hist, align='center', width=width)
     plt.show()
+
+if __name__ == '__main__':
+    main()
