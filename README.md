@@ -10,10 +10,10 @@ run GPM.py on IPython console
 
 ## Dependencies
 
-*pandas
-*numba
-*matplotlib
-*numpy
+* pandas
+* numba
+* matplotlib
+* numpy
 
 ## License
 
