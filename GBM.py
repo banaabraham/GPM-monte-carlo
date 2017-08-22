@@ -23,7 +23,7 @@ def get_return_df(stock):
         mth_return.append((y[i]-y[i-10])/y[i-10])
     resiko = statistics.stdev(mth_return)
     return e_return,resiko
-
+@jit
 def get_return(stock):
     d = pd.read_csv(stock)
     d.iloc[:] = d.iloc[::-1].values
