@@ -5,6 +5,12 @@ import statistics
 from numba import jit
 import random
 from matplotlib import pyplot as plt
+import urllib
+
+def closeprice(ticker):
+    url="https://www.google.com/finance/historical?output=csv&q="+ticker
+    stock=ticker+".csv"
+    urllib.request.urlretrieve (url, stock) 
 
 @jit
 def get_return_df(stock):
@@ -23,6 +29,7 @@ def get_return_df(stock):
         mth_return.append((y[i]-y[i-10])/y[i-10])
     resiko = statistics.stdev(mth_return)
     return e_return,resiko
+
 @jit
 def get_return(stock):
     d = pd.read_csv(stock)
@@ -41,10 +48,12 @@ def get_return(stock):
     resiko = statistics.stdev(mth_return)
     return e_return,resiko
 
+
 def monte_carlo(trials,i_price,k,w,e_return,stdev):
     prices = [[] for i in range(trials)]
     days = w*k
     initial = i_price
+    e_return = e_return*k
     for i in range(len(prices)):
         i_price = initial
         prices[i].append(i_price)
@@ -68,7 +77,7 @@ def main():
     b=1
     while b==1:
         file_type = input("Input File Type (Dataframe(df) or list (l)): ")
-        if file_type=="df" or file_type=="l":
+        if file_type=="df" or file_type=="l" :
             b=0
     if file_type=="df":
         file = input("input file: ")
@@ -78,8 +87,7 @@ def main():
         something = get_return(file)    
                        
     i_price = float(input("Initial price: "))
-    e_return,resiko = something
-    
+    e_return,resiko = something    
     trials = int(input("Number of trials: "))   
     opsi = input("Seconds, Hours, Days (S/H/D): ")
     
