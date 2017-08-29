@@ -76,7 +76,7 @@ def analyze(prices):
 def main():    
     b=1
     while b==1:
-        file_type = input("Input File Type (Dataframe(df) or list (l)): ")
+        file_type = input("Dataframe(df) or close price list (l)): ")
         if file_type=="df" or file_type=="l" :
             b=0
     if file_type=="df":
