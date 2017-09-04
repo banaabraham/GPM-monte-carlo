@@ -11,7 +11,6 @@ run GPM.py on IPython console
 ## Dependencies
 
 * pandas
-* numba
 * matplotlib
 * numpy
 
