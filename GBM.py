@@ -2,7 +2,6 @@ import pandas as pd
 from sklearn.svm import SVR
 import numpy as np
 import statistics
-from numba import jit
 import random
 from matplotlib import pyplot as plt
 import urllib
@@ -12,9 +11,17 @@ def closeprice(ticker):
     stock=ticker+".csv"
     urllib.request.urlretrieve (url, stock) 
 
-@jit
+
 def get_return_df(stock):
-    d = pd.read_csv(stock)
+    try:
+        d = pd.read_csv(stock)
+    except:
+        ticker = stock.strip(".csv")
+        url="https://www.google.com/finance/historical?output=csv&q="+ticker
+        stock=ticker+".csv"
+        urllib.request.urlretrieve (url, stock)
+        d = pd.read_csv(stock)
+                
     d.iloc[:] = d.iloc[::-1].values
     svr_lin = SVR(kernel= 'linear', C= 1e3)
     X=np.arange(1,len(d)+1,1.0)
@@ -30,7 +37,7 @@ def get_return_df(stock):
     resiko = statistics.stdev(mth_return)
     return e_return,resiko
 
-@jit
+
 def get_return(stock):
     d = pd.read_csv(stock)
     d.iloc[:] = d.iloc[::-1].values
@@ -76,7 +83,7 @@ def analyze(prices):
 def main():    
     b=1
     while b==1:
-        file_type = input("Dataframe(df) or close price list (l)): ")
+        file_type = input("Input File Type (Dataframe(df) or list (l)): ")
         if file_type=="df" or file_type=="l" :
             b=0
     if file_type=="df":
